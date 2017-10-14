@@ -24,7 +24,7 @@ import java.util.Scanner;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView listaCategorias;
-    private String categoriesEndPoint = "http://davids-restaurant.herokuapp.com/categories.json";
+    private String categoriesEndPoint = "https://api.themoviedb.org/3/movie/popular?api_key=a23e1e6c36e4f42b4595e036ab812329";
 
     //Cria a activity e executa a chamada à API
     @Override
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listaCategorias = (RecyclerView) findViewById(R.id.lista_categorias);
-        setTitle("Categorias");
+        setTitle("Filmes");
         new getCategoriesAsync().execute();
     }
 
@@ -61,10 +61,13 @@ public class MainActivity extends AppCompatActivity {
             if(s == null) return;
 
             try {
-                JSONArray array = new JSONArray(s);
+                JSONObject obj = new JSONObject(s);
+                String filmes = obj.getString("results");
+                JSONArray array = new JSONArray(filmes);
                 listaCategorias.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                CategoriasAdapter adapter = new CategoriasAdapter(getApplicationContext(), array);
+                CategoriasAdapter adapter = new CategoriasAdapter(getApplicationContext(),array);
                 listaCategorias.setAdapter(adapter);
+                //Log.e("TAGGG", array.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     //Metodo que gera uma conexão HTTP e processa o inputStream em uma String
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        Log.e("",urlConnection.getResponseCode()+"");
         try {
             InputStream in = urlConnection.getInputStream();
 

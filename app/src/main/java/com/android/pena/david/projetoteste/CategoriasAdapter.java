@@ -2,13 +2,17 @@ package com.android.pena.david.projetoteste;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,11 +64,13 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Vi
 
         private TextView categoryName;
         private CardView cardView;
+        private ImageView imgName;
         private JSONObject categoria;
 
         public ViewHolder(View itemView) {
             super(itemView);
             categoryName = (TextView) itemView.findViewById(R.id.categoria_name);
+            imgName = (ImageView) itemView.findViewById(R.id.image_name);
             cardView = (CardView) itemView.findViewById(R.id.categoria_cardview);
             cardView.setOnClickListener(this);
 
@@ -73,7 +79,9 @@ public class CategoriasAdapter extends RecyclerView.Adapter<CategoriasAdapter.Vi
         public void bindData(JSONObject category){
             categoria = category;
             try {
-                categoryName.setText(category.getString("name"));
+                categoryName.setText(category.getString("title"));
+                String posterPath = "https://image.tmdb.org/t/p/w300_and_h450_bestv2"+ category.getString("poster_path");
+                Picasso.with(context).load(posterPath).into(imgName);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
